@@ -5,13 +5,13 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from models import User
-from database import SessionLocal, engine
+from database import SessionLocal, engine, Base
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-
+from models import User
 
 app = FastAPI()
-
+Base.metadata.create_all(bind=engine)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 origins = [
