@@ -5,7 +5,7 @@ export const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false); // should be false instead of empty string
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -28,12 +28,12 @@ export const Login = () => {
         formDetails.append('password', password);
 
         try {
-            const response = await fetch('http://localhost:8000/token', { // Fixed "httop" typo
+            const response = await fetch('http://localhost:8000/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: formDetails, // Correct usage
+                body: formDetails,
             });
 
             setLoading(false);
@@ -53,29 +53,42 @@ export const Login = () => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username: </label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Password: </label> {/* Fixed incorrect label */}
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Logging in...' : 'Login'}
-                </button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-            </form>
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">Login</h2>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-gray-700 text-sm font-semibold">Username:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-gray-700 text-sm font-semibold">Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        />
+                    </div>
+
+                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition disabled:bg-gray-400"
+                    >
+                        {loading ? 'Logging in...' : 'Login'}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
