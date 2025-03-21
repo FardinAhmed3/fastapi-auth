@@ -117,3 +117,34 @@ def verify_token(token: str = Depends(oauth2_scheme)):
 async def verify_user_token(token: str):
     verify_token(token=token)
     return {"message": "Token is valid"}
+
+
+class UserUpdate(BaseModel):
+    new_username: str | None = None
+    new_password: str | None = None
+
+@app.get("/me")
+def get_current_user_info(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = verify_token(token)
+    username = payload.get("sub")
+    user = get_user_by_username(db, username=username)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"username": user.username}
+
+@app.put("/change-credentials")
+def change_credentials(update: UserUpdate, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = verify_token(token)
+    username = payload.get("sub")
+    user = get_user_by_username(db, username=username)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if update.new_username:
+        existing_user = get_user_by_username(db, username=update.new_username)
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already taken")
+        user.username = update.new_username
+    if update.new_password:
+        user.hashed_password = pwd_context.hash(update.new_password)
+    db.commit()
+    return {"message": "Credentials updated successfully"}
