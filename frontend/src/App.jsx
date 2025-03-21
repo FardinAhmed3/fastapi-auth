@@ -1,7 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login.jsx";
+import Signup from "./Pages/Signup.jsx";
 import ProtectedPage from "./Pages/Protected";
+import ChangeCredentials from "./Pages/ChangeCredentials.jsx";
 
 function App() {
   return (
@@ -9,7 +11,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/protected" element={<ProtectedPage />} />
+          <Route path="/change-credentials" element={<ChangeCredentials/>}/>
         </Routes>
       </Router>
     </div>
